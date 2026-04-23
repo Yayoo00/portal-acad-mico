@@ -144,3 +144,4 @@ C:\Users\Admin\OneDrive\Documentos\progra_2026\pc2\PortalAcademico\obj\Debug\net
 C:\Users\Admin\OneDrive\Documentos\progra_2026\pc2\PortalAcademico\obj\Debug\net8.0\PortalAcademico.pdb
 C:\Users\Admin\OneDrive\Documentos\progra_2026\pc2\PortalAcademico\obj\Debug\net8.0\PortalAcademico.genruntimeconfig.cache
 C:\Users\Admin\OneDrive\Documentos\progra_2026\pc2\PortalAcademico\obj\Debug\net8.0\ref\PortalAcademico.dll
+C:\Users\Admin\OneDrive\Documentos\progra_2026\pc2\PortalAcademico\obj\Debug\net8.0\PortalAcademico.sourcelink.json
