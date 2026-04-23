@@ -1,0 +1,76 @@
+@model List<PortalAcademico.Models.Curso>
+
+@{
+    ViewData["Title"] = "Catálogo de cursos";
+}
+
+<h1>Catálogo de cursos</h1>
+
+<form asp-action="Index" method="get" class="mb-4">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label class="form-label">Nombre</label>
+            <input type="text" name="nombre" value="@ViewBag.Nombre" class="form-control" placeholder="Buscar por nombre" />
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">Créditos mín.</label>
+            <input type="number" name="minCreditos" value="@ViewBag.MinCreditos" class="form-control" />
+            <span class="text-danger">@Html.ValidationMessage("minCreditos")</span>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">Créditos máx.</label>
+            <input type="number" name="maxCreditos" value="@ViewBag.MaxCreditos" class="form-control" />
+            <span class="text-danger">@Html.ValidationMessage("maxCreditos")</span>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">Horario</label>
+            <input type="time" name="horario" value="@ViewBag.Horario" class="form-control" />
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">
+        No se encontraron cursos activos con esos filtros.
+    </div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Créditos</th>
+                <th>Horario Inicio</th>
+                <th>Horario Fin</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var curso in Model)
+        {
+            <tr>
+                <td>@curso.Codigo</td>
+                <td>@curso.Nombre</td>
+                <td>@curso.Creditos</td>
+                <td>@curso.HorarioInicio.ToString("HH:mm")</td>
+                <td>@curso.HorarioFin.ToString("HH:mm")</td>
+                <td>
+                    <a asp-action="Detalle" asp-route-id="@curso.Id" class="btn btn-sm btn-info">
+                        Ver detalle
+                    </a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
