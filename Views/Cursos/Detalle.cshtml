@@ -6,6 +6,27 @@
 
 <h1>Detalle del curso</h1>
 
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Mensaje"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-warning">
+        @Html.ValidationSummary()
+    </div>
+}
+
 <div class="card">
     <div class="card-body">
         <h4 class="card-title">@Model.Nombre</h4>
@@ -16,7 +37,10 @@
         <p><strong>Horario fin:</strong> @Model.HorarioFin.ToString("HH:mm")</p>
         <p><strong>Activo:</strong> @(Model.Activo ? "Sí" : "No")</p>
 
-        <a class="btn btn-success" href="#">Inscribirse</a>
-        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+        <form asp-action="Inscribirse" method="post">
+            <input type="hidden" name="cursoId" value="@Model.Id" />
+            <button type="submit" class="btn btn-success">Inscribirse</button>
+            <a asp-action="Index" class="btn btn-secondary">Volver</a>
+        </form>
     </div>
 </div>
