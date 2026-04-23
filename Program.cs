@@ -70,14 +70,14 @@ async Task SeedUsers(IServiceProvider services)
         await roleManager.CreateAsync(new IdentityRole(role));
 
     // Buscar usuario
-    var user = await userManager.FindByEmailAsync("coordinador@uni.com");
+    var user = await userManager.FindByEmailAsync("coordinador@usmp.com");
 
     if (user == null)
     {
         user = new IdentityUser
         {
-            UserName = "coordinador@uni.com",
-            Email = "coordinador@uni.com",
+            UserName = "coordinador@usmp.com",
+            Email = "coordinador@usmp.com",
             EmailConfirmed = true
         };
 
