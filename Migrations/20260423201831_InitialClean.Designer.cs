@@ -2,17 +2,20 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PortalAcademico.Data;
 
 #nullable disable
 
-namespace PortalAcademico.Data.Migrations
+namespace PortalAcademico.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260423201831_InitialClean")]
+    partial class InitialClean
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.26");
@@ -213,6 +216,73 @@ namespace PortalAcademico.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("PortalAcademico.Models.Curso", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Creditos")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CupoMaximo")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("HorarioFin")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("HorarioInicio")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Codigo")
+                        .IsUnique();
+
+                    b.ToTable("Cursos", t =>
+                        {
+                            t.HasCheckConstraint("CK_Curso_Horario", "HorarioInicio < HorarioFin");
+                        });
+                });
+
+            modelBuilder.Entity("PortalAcademico.Models.Matricula", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CursoId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Estado")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("FechaRegistro")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UsuarioId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CursoId", "UsuarioId")
+                        .IsUnique();
+
+                    b.ToTable("Matriculas");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -262,6 +332,22 @@ namespace PortalAcademico.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PortalAcademico.Models.Matricula", b =>
+                {
+                    b.HasOne("PortalAcademico.Models.Curso", "Curso")
+                        .WithMany("Matriculas")
+                        .HasForeignKey("CursoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Curso");
+                });
+
+            modelBuilder.Entity("PortalAcademico.Models.Curso", b =>
+                {
+                    b.Navigation("Matriculas");
                 });
 #pragma warning restore 612, 618
         }
