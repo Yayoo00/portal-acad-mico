@@ -4,80 +4,99 @@ using PortalAcademico.Data;
 using PortalAcademico.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace PortalAcademico.Controllers
 {
     public class CursosController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMemoryCache _cache;
 
-        public CursosController(ApplicationDbContext context)
+        public CursosController(ApplicationDbContext context, IMemoryCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         public async Task<IActionResult> Index(string? nombre, int? minCreditos, int? maxCreditos, DateTime? horario)
         {
             if (minCreditos.HasValue && minCreditos.Value < 0)
-            {
-                ModelState.AddModelError("minCreditos", "No se aceptan créditos negativos.");
-            }
+    {
+        ModelState.AddModelError("minCreditos", "No se aceptan créditos negativos.");
+    }
 
-            if (maxCreditos.HasValue && maxCreditos.Value < 0)
-            {
-                ModelState.AddModelError("maxCreditos", "No se aceptan créditos negativos.");
-            }
+    if (maxCreditos.HasValue && maxCreditos.Value < 0)
+    {
+        ModelState.AddModelError("maxCreditos", "No se aceptan créditos negativos.");
+    }
 
-            IQueryable<Curso> query = _context.Cursos.Where(c => c.Activo);
+    var cacheKey = "cursos_activos";
 
-            if (!string.IsNullOrWhiteSpace(nombre))
-            {
-                query = query.Where(c => c.Nombre.Contains(nombre));
-            }
+    if (!_cache.TryGetValue(cacheKey, out List<Curso>? cursosCacheados))
+    {
+        cursosCacheados = await _context.Cursos
+            .Where(c => c.Activo)
+            .OrderBy(c => c.Nombre)
+            .ToListAsync();
 
-            if (minCreditos.HasValue)
-            {
-                query = query.Where(c => c.Creditos >= minCreditos.Value);
-            }
+        var cacheOptions = new MemoryCacheEntryOptions()
+            .SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
 
-            if (maxCreditos.HasValue)
-            {
-                query = query.Where(c => c.Creditos <= maxCreditos.Value);
-            }
+        _cache.Set(cacheKey, cursosCacheados, cacheOptions);
+    }
 
-            if (horario.HasValue)
-            {
-                var hora = horario.Value.TimeOfDay;
-                query = query.Where(c => c.HorarioInicio.TimeOfDay <= hora && c.HorarioFin.TimeOfDay >= hora);
-            }
+    var cursos = cursosCacheados.AsQueryable();
 
-            var cursos = await query.OrderBy(c => c.Nombre).ToListAsync();
+    if (!string.IsNullOrWhiteSpace(nombre))
+    {
+        cursos = cursos.Where(c => c.Nombre.Contains(nombre, StringComparison.OrdinalIgnoreCase));
+    }
 
-            ViewBag.Nombre = nombre;
-            ViewBag.MinCreditos = minCreditos;
-            ViewBag.MaxCreditos = maxCreditos;
-            ViewBag.Horario = horario?.ToString("HH:mm");
+    if (minCreditos.HasValue)
+    {
+        cursos = cursos.Where(c => c.Creditos >= minCreditos.Value);
+    }
 
-            return View(cursos);
+    if (maxCreditos.HasValue)
+    {
+        cursos = cursos.Where(c => c.Creditos <= maxCreditos.Value);
+    }
+
+    if (horario.HasValue)
+    {
+        var hora = horario.Value.TimeOfDay;
+        cursos = cursos.Where(c => c.HorarioInicio.TimeOfDay <= hora && c.HorarioFin.TimeOfDay >= hora);
+    }
+
+    ViewBag.Nombre = nombre;
+    ViewBag.MinCreditos = minCreditos;
+    ViewBag.MaxCreditos = maxCreditos;
+    ViewBag.Horario = horario?.ToString("HH:mm");
+
+    return View(cursos.ToList());
         }
 
         public async Task<IActionResult> Detalle(int id)
-        {
-            var curso = await _context.Cursos
-                .FirstOrDefaultAsync(c => c.Id == id && c.Activo);
+    {
+        var curso = await _context.Cursos
+        .FirstOrDefaultAsync(c => c.Id == id && c.Activo);
 
-            if (curso == null)
-            {
-                return NotFound();
-            }
+    if (curso == null)
+    {
+        return NotFound();
+    }
 
-            if (curso.HorarioFin <= curso.HorarioInicio)
-            {
-                ModelState.AddModelError("", "El horario del curso es inválido.");
-            }
+    if (curso.HorarioFin <= curso.HorarioInicio)
+    {
+        ModelState.AddModelError("", "El horario del curso es inválido.");
+    }
 
-            return View(curso);
-        }
+    HttpContext.Session.SetInt32("UltimoCursoId", curso.Id);
+    HttpContext.Session.SetString("UltimoCursoNombre", curso.Nombre);
+
+    return View(curso);
+}
 
         [HttpPost]
         [Authorize]
