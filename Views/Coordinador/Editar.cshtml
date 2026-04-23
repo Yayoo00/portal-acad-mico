@@ -1,0 +1,46 @@
+@model PortalAcademico.Models.Curso
+
+@{
+    ViewData["Title"] = "Editar Curso";
+}
+
+<h1>Editar Curso</h1>
+
+<form asp-action="Editar" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label>Código</label>
+        <input asp-for="Codigo" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Nombre</label>
+        <input asp-for="Nombre" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Créditos</label>
+        <input asp-for="Creditos" type="number" class="form-control" />
+        <span class="text-danger">@Html.ValidationMessage("Creditos")</span>
+    </div>
+
+    <div class="mb-3">
+        <label>Cupo Máximo</label>
+        <input asp-for="CupoMaximo" type="number" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Horario Inicio</label>
+        <input asp-for="HorarioInicio" type="time" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Horario Fin</label>
+        <input asp-for="HorarioFin" type="time" class="form-control" />
+        <span class="text-danger">@Html.ValidationMessage("HorarioFin")</span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+</form>
