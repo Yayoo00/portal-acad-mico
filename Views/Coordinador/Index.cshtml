@@ -1,0 +1,45 @@
+@model List<PortalAcademico.Models.Curso>
+
+@{
+    ViewData["Title"] = "Panel Coordinador";
+}
+
+<h1>Panel Coordinador</h1>
+
+<a asp-action="Crear" class="btn btn-primary mb-3">Crear curso</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Créditos</th>
+            <th>Cupo</th>
+            <th>Horario</th>
+            <th>Activo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var curso in Model)
+    {
+        <tr>
+            <td>@curso.Codigo</td>
+            <td>@curso.Nombre</td>
+            <td>@curso.Creditos</td>
+            <td>@curso.CupoMaximo</td>
+            <td>@curso.HorarioInicio.ToString("HH:mm") - @curso.HorarioFin.ToString("HH:mm")</td>
+            <td>@(curso.Activo ? "Sí" : "No")</td>
+            <td>
+                <a asp-action="Editar" asp-route-id="@curso.Id" class="btn btn-sm btn-warning">Editar</a>
+                <a asp-action="Matriculas" asp-route-cursoId="@curso.Id" class="btn btn-sm btn-info">Matrículas</a>
+
+                <form asp-action="Desactivar" method="post" class="d-inline">
+                    <input type="hidden" name="id" value="@curso.Id" />
+                    <button type="submit" class="btn btn-sm btn-danger">Desactivar</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
