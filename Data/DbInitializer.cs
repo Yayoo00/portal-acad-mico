@@ -16,8 +16,8 @@ namespace PortalAcademico.Data
                     Nombre = "Matemática I",
                     Creditos = 4,
                     CupoMaximo = 30,
-                    HorarioInicio = DateTime.Now.AddHours(1),
-                    HorarioFin = DateTime.Now.AddHours(3),
+                    HorarioInicio = DateTime.Today.AddHours(8),
+                    HorarioFin = DateTime.Today.AddHours(10),
                     Activo = true
                 },
                 new Curso
@@ -26,8 +26,8 @@ namespace PortalAcademico.Data
                     Nombre = "Programación I",
                     Creditos = 5,
                     CupoMaximo = 25,
-                    HorarioInicio = DateTime.Now.AddHours(4),
-                    HorarioFin = DateTime.Now.AddHours(6),
+                    HorarioInicio = DateTime.Today.AddHours(9),
+                    HorarioFin = DateTime.Today.AddHours(11),
                     Activo = true
                 },
                 new Curso
@@ -36,8 +36,8 @@ namespace PortalAcademico.Data
                     Nombre = "Base de Datos",
                     Creditos = 4,
                     CupoMaximo = 20,
-                    HorarioInicio = DateTime.Now.AddHours(7),
-                    HorarioFin = DateTime.Now.AddHours(9),
+                    HorarioInicio = DateTime.Today.AddHours(14),
+                    HorarioFin = DateTime.Today.AddHours(16),
                     Activo = true
                 }
             );
