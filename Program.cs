@@ -11,6 +11,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
@@ -39,5 +40,50 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+    // Esto crea la BD y aplica migraciones automáticamente
+    context.Database.Migrate();
+
+    // Luego recién ejecuta el seed
+    DbInitializer.Seed(context);
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await SeedUsers(services);
+}
+
+async Task SeedUsers(IServiceProvider services)
+{
+    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+    string role = "Coordinador";
+
+    // Crear rol si no existe
+    if (!await roleManager.RoleExistsAsync(role))
+        await roleManager.CreateAsync(new IdentityRole(role));
+
+    // Buscar usuario
+    var user = await userManager.FindByEmailAsync("coordinador@uni.com");
+
+    if (user == null)
+    {
+        user = new IdentityUser
+        {
+            UserName = "coordinador@uni.com",
+            Email = "coordinador@uni.com",
+            EmailConfirmed = true
+        };
+
+        await userManager.CreateAsync(user, "Admin123!");
+        await userManager.AddToRoleAsync(user, role);
+    }
+}
 
 app.Run();
