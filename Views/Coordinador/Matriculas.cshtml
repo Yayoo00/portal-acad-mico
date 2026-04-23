@@ -1,0 +1,41 @@
+@model PortalAcademico.Models.Curso
+
+@{
+    ViewData["Title"] = "Matrículas";
+}
+
+<h1>Matrículas de @Model.Nombre</h1>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var m in Model.Matriculas)
+    {
+        <tr>
+            <td>@m.UsuarioId</td>
+            <td>@m.FechaRegistro.ToString("g")</td>
+            <td>@m.Estado</td>
+            <td>
+                <form asp-action="ConfirmarMatricula" method="post" class="d-inline">
+                    <input type="hidden" name="id" value="@m.Id" />
+                    <button class="btn btn-sm btn-success">Confirmar</button>
+                </form>
+
+                <form asp-action="CancelarMatricula" method="post" class="d-inline">
+                    <input type="hidden" name="id" value="@m.Id" />
+                    <button class="btn btn-sm btn-danger">Cancelar</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary">Volver</a>
