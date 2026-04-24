@@ -2,45 +2,77 @@
     ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center py-5">
-    <h1 class="display-4 fw-bold">Portal Académico</h1>
+<section class="bg-light rounded-4 shadow-sm p-5 mb-5 text-center">
+    <h1 class="display-4 fw-bold text-primary">Portal Académico</h1>
     <p class="lead mt-3">
-        Gestiona cursos, matrículas y procesos académicos de manera rápida y segura.
+        Gestiona cursos, matrículas y procesos académicos de forma rápida, segura y organizada.
     </p>
 
     <div class="mt-4">
         <a asp-controller="Cursos" asp-action="Index" class="btn btn-primary btn-lg me-2">
-            Ver Catálogo de Cursos
+            Ver catálogo
         </a>
 
         @if (User.IsInRole("Coordinador"))
         {
             <a asp-controller="Coordinador" asp-action="Index" class="btn btn-outline-dark btn-lg">
-                Panel Coordinador
+                Panel coordinador
             </a>
         }
     </div>
-</div>
+</section>
 
-<div class="row text-center mt-5">
+<section class="row g-4">
     <div class="col-md-4">
-        <div class="card shadow-sm p-4">
-            <h4>Cursos</h4>
-            <p>Consulta la oferta académica activa y filtra por nombre, créditos u horario.</p>
+        <div class="card h-100 border-0 shadow-sm rounded-4">
+            <div class="card-body text-center p-4">
+                <div class="display-5 mb-3">📚</div>
+                <h4 class="fw-bold">Catálogo de cursos</h4>
+                <p class="text-muted">
+                    Explora cursos activos y filtra por nombre, créditos u horario.
+                </p>
+                <a asp-controller="Cursos" asp-action="Index" class="btn btn-sm btn-primary">
+                    Ir al catálogo
+                </a>
+            </div>
         </div>
     </div>
 
     <div class="col-md-4">
-        <div class="card shadow-sm p-4">
-            <h4>Matrículas</h4>
-            <p>Inscríbete en cursos disponibles con validación automática de cupos y horarios.</p>
+        <div class="card h-100 border-0 shadow-sm rounded-4">
+            <div class="card-body text-center p-4">
+                <div class="display-5 mb-3">📝</div>
+                <h4 class="fw-bold">Matrículas</h4>
+                <p class="text-muted">
+                    Inscríbete con validaciones de cupo, duplicidad y cruce de horarios.
+                </p>
+                <a asp-controller="Cursos" asp-action="Index" class="btn btn-sm btn-success">
+                    Inscribirme
+                </a>
+            </div>
         </div>
     </div>
 
     <div class="col-md-4">
-        <div class="card shadow-sm p-4">
-            <h4>Coordinador</h4>
-            <p>Administra cursos, revisa matrículas y confirma o cancela solicitudes.</p>
+        <div class="card h-100 border-0 shadow-sm rounded-4">
+            <div class="card-body text-center p-4">
+                <div class="display-5 mb-3">🧑‍💼</div>
+                <h4 class="fw-bold">Coordinador</h4>
+                <p class="text-muted">
+                    Administra cursos y gestiona matrículas desde un panel protegido por rol.
+                </p>
+
+                @if (User.IsInRole("Coordinador"))
+                {
+                    <a asp-controller="Coordinador" asp-action="Index" class="btn btn-sm btn-dark">
+                        Abrir panel
+                    </a>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">Acceso restringido</span>
+                }
+            </div>
         </div>
     </div>
-</div>
+</section>
