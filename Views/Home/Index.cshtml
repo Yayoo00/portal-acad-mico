@@ -1,8 +1,46 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center py-5">
+    <h1 class="display-4 fw-bold">Portal Académico</h1>
+    <p class="lead mt-3">
+        Gestiona cursos, matrículas y procesos académicos de manera rápida y segura.
+    </p>
+
+    <div class="mt-4">
+        <a asp-controller="Cursos" asp-action="Index" class="btn btn-primary btn-lg me-2">
+            Ver Catálogo de Cursos
+        </a>
+
+        @if (User.IsInRole("Coordinador"))
+        {
+            <a asp-controller="Coordinador" asp-action="Index" class="btn btn-outline-dark btn-lg">
+                Panel Coordinador
+            </a>
+        }
+    </div>
+</div>
+
+<div class="row text-center mt-5">
+    <div class="col-md-4">
+        <div class="card shadow-sm p-4">
+            <h4>Cursos</h4>
+            <p>Consulta la oferta académica activa y filtra por nombre, créditos u horario.</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm p-4">
+            <h4>Matrículas</h4>
+            <p>Inscríbete en cursos disponibles con validación automática de cupos y horarios.</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm p-4">
+            <h4>Coordinador</h4>
+            <p>Administra cursos, revisa matrículas y confirma o cancela solicitudes.</p>
+        </div>
+    </div>
 </div>
