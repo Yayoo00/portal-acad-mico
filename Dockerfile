@@ -3,8 +3,8 @@ WORKDIR /src
 
 COPY . .
 
-RUN dotnet restore ./PortalAcademico/PortalAcademico.csproj
-RUN dotnet publish ./PortalAcademico/PortalAcademico.csproj -c Release -o /app/publish
+RUN dotnet restore PortalAcademico.csproj
+RUN dotnet publish PortalAcademico.csproj -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
